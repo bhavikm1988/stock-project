@@ -1,0 +1,9 @@
+.head{
+    background-color: black;
+    text-decoration-color: blue;
+}
+
+.box{
+    height: 500px;
+    overflow-y: auto;
+}
