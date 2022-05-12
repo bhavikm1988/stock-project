@@ -21,11 +21,16 @@ async function getStocks() {
         var sli = document.createElement('li');
         var uli = document.createElement('li');
         var dli = document.createElement('li');
+        
+        var aTag = document.createElement('a');
 
+        uli.appendChild(aTag);
+        
         pli.textContent = price.c;
         sli.textContent = symbol;
         dli.textContent = profile.name;
-        uli.textContent = profile.weburl;
+        aTag.textContent = profile.weburl;
+        aTag.href = profile.weburl;
 
         priceList.appendChild(pli);
         symbolList.appendChild(sli);
