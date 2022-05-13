@@ -2,6 +2,9 @@ var stock_price = document.getElementById("stock_price");
 var stock_symbol = document.getElementById("stock_symbol");
 var stock_desc = document.getElementById("stock_desc");
 var stock_url = document.getElementById("stock_url");
+var market_news = document.getElementById("market_news");
+var company_news = document.getElementById("company_news");
+var company_button = document.querySelector("#company_button");
 
 async function getStocks() {
     var priceList = document.createElement('ul');
@@ -23,7 +26,6 @@ async function getStocks() {
         var dli = document.createElement('li');
         
         var aTag = document.createElement('a');
-
         uli.appendChild(aTag);
         
         pli.textContent = price.c;
@@ -41,7 +43,6 @@ async function getStocks() {
     stock_symbol.appendChild(symbolList);
     stock_desc.appendChild(descList);
     stock_url.appendChild(urlList);
-
 }
 
 async function getStockSymbol() {
@@ -62,4 +63,62 @@ async function getWebsiteURL(symbol) {
     return profileResponse
 }
 
+async function getCompanyNews(symbol) {
+    var companyNews = 'https://finnhub.io/api/v1/company-news?symbol='+symbol+'&from=2022-05-11&to=2022-05-12&token=c9sqnaqad3ib0ug2vn2g';
+    var newList = document.createElement('ol');
+    var state = company_news.getAttribute("data-state");
+    fetch(companyNews)
+    .then((resp) => {
+        return resp.json()
+      }).then((data) => {
+        for ( let i=0;  i< 3;  i++){
+            console.log(data[i].headline);
+            var nli = document.createElement('li');
+            var aTag = document.createElement('a');
+            nli.appendChild(aTag);
+            aTag.textContent = data[i].headline;
+            aTag.href = data[i].url;
+            newList.appendChild(nli);
+        }
+    });
+    if (state === "hidden"){
+        //default
+        company_news.appendChild(newList);
+        company_news.dataset.state = "visible";
+    } else {
+        company_news.replaceChild();
+        company_news.appendChild(newList);
+        company_news.dataset.state = "hidden";
+    }
+   
+}
+
+function getMarketNews() {
+    var marketNews = 'https://finnhub.io/api/v1/news?category=general&token=c9sqnaqad3ib0ug2vn2g';
+    const newList = document.createElement('ol');
+    fetch(marketNews)
+    .then((resp) => {
+        return resp.json()
+      }).then((data) => {
+        for ( let i=0;  i< data.length;  i++){
+            var nli = document.createElement('li');
+            var aTag = document.createElement('a');
+            nli.appendChild(aTag);
+            aTag.textContent = data[i].headline;
+            aTag.href = data[i].url;
+            newList.appendChild(nli);
+        }
+    });
+    market_news.appendChild(newList);
+
+}
+
 getStocks();
+getMarketNews();
+getCompanyNews("FB");
+
+company_button.addEventListener("click", function() {
+    console.log("hello");
+    getCompanyNews("AAPL");
+  });
+
